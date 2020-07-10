@@ -265,11 +265,131 @@ select timediff('07:10:00' , current_time) as diferenca_até_hora_de_acordar;
 
 #Relacionamento utilizando o WHERE
 show tables;
+# entre 3 tabelas
 select tbl_ator.nome, tbl_telefones.telefone, tbl_tipotelefone.tipo
 from tbl_ator, tbl_telefones, tbl_tipotelefone
 where tbl_telefones.idtelefone = tbl_ator.idtelefone
 and tbl_tipotelefone.idTipoTelefone = tbl_telefones.idTipoTelefone;
 
 desc tbl_tipotelefone; 
-select * from tbl_ator;
+select * from tblFilme_ator;
 select * from tbl_telefones;
+
+select * from tbl_telefones;        
+select * from tbl_ator;        
+select * from tbl_tipotelefone;
+select * from tbl_genero;
+select * from tbl_filme;
+select * from tbl_filme_genero;
+select * from tbl_filme_ator;
+
+select tbl_ator.nome, tbl_telefones.telefone, tbl_tipotelefone.tipo, tbl_filme.nome
+from tbl_ator, tbl_telefones, tbl_tipotelefone, tbl_filme, tbl_filme_ator
+where tbl_telefones.idtelefone = tbl_ator.idtelefone
+and tbl_tipotelefone.idTipoTelefone = tbl_telefones.idTipoTelefone
+#relacionamento quando existe uma tabela intermediaria
+and tbl_filme.idFilme = tbl_filme_ator.idFilme
+and tbl_ator.idAtor = tbl_filme_ator.idAtor; 
+
+select tbl_ator.nome, tbl_telefones.telefone, tbl_tipotelefone.tipo, tbl_filme.nome, tbl_genero.nome
+from tbl_ator, tbl_telefones, tbl_tipotelefone, tbl_filme, tbl_filme_ator,tbl_genero,tbl_filme_genero
+where tbl_telefones.idtelefone = tbl_ator.idtelefone
+and tbl_tipotelefone.idTipoTelefone = tbl_telefones.idTipoTelefone
+#relacionamentos quando existe uma tabela intermediaria
+and tbl_filme.idFilme = tbl_filme_ator.idFilme
+and tbl_ator.idAtor = tbl_filme_ator.idAtor 
+and tbl_filme_genero.idGenero = tbl_genero.idGenero
+and tbl_filme.idFilme = tbl_filme_genero.idFilme;
+
+#Relacionamento usando inner Join
+
+select tbl_ator.nome, tbl_telefones.telefone, tbl_tipotelefone.tipo
+from  tbl_ator 
+inner join tbl_telefones 
+on tbl_telefones.idtelefone = tbl_ator.idtelefone 
+inner join tbl_tipotelefone 
+on tbl_tipotelefone.idTipoTelefone = tbl_telefones.idTipoTelefone ;
+
+
+select tbl_ator.nome, tbl_telefones.telefone, tbl_tipotelefone.tipo, tbl_filme.nome
+from tbl_tipotelefone 
+inner join tbl_telefones
+on tbl_tipotelefone.idTipoTelefone = tbl_telefones.idTipoTelefone
+inner join tbl_ator
+on tbl_telefones.idtelefone = tbl_ator.idtelefone 
+inner join tbl_filme_ator
+on tbl_filme_ator.idAtor = tbl_ator.idAtor
+inner join tbl_filme
+on tbl_filme_ator.idFilme = tbl_filme.idFilme;
+
+select tbl_ator.nome, tbl_telefones.telefone, tbl_tipotelefone.tipo, tbl_filme.nome, 
+tbl_genero.nome 
+from tbl_tipotelefone inner join tbl_telefones
+on tbl_tipotelefone.idTipoTelefone = tbl_telefones.idTipoTelefone
+inner join tbl_ator
+on tbl_telefones.idtelefone = tbl_ator.idtelefone
+inner join tbl_filme_ator
+on tbl_filme_ator.idAtor = tbl_ator.idtelefone
+inner join tbl_filme
+on tbl_filme.idFilme = tbl_filme_ator.idFilme
+inner join tbl_filme_genero
+on tbl_filme.idFilme = tbl_filme_genero.idFilme
+inner join tbl_genero
+on tbl_genero.idGenero = tbl_filme_genero.idGenero;
+
+select * from tbl_filme_genero;
+show tables;
+
+#INNER JOIN --> traz apenas a intersecção entre as duas tabelas
+select tbl_telefones.telefone, tbl_tipotelefone.tipo
+from tbl_tipotelefone
+inner join tbl_telefones
+on tbl_tipotelefone.idTipoTelefone = tbl_telefones.idTipoTelefone;
+
+#LEFT JOIN --> tras a intercecção e também traz tudo que tem na tabela da esquerda 
+# (a primeira declarada no comando) e não tem na outra
+select tbl_telefones.telefone, tbl_tipotelefone.tipo
+from tbl_tipotelefone
+left join tbl_telefones
+on tbl_tipotelefone.idTipoTelefone = tbl_telefones.idTipoTelefone;
+
+#RIGHT JOIN --> tras a intercecção e também traz tudo que tem na tabela da esquerda 
+# (a primeira declarada no comando) e não tem na outra
+select tbl_telefones.telefone, tbl_tipotelefone.tipo
+from tbl_tipotelefone
+right join tbl_telefones
+on tbl_tipotelefone.idTipoTelefone = tbl_telefones.idTipoTelefone;
+
+# VAI TRAZER O GENERO QUE NÃO PERTENCE A NENHUM FILME
+select tbl_filme.nome as filme, tbl_genero.nome as genero
+from tbl_filme 
+left join tbl_filme_genero
+on tbl_filme.idFilme = tbl_filme_genero.idFilme
+right join tbl_genero
+on tbl_genero.idGenero = tbl_filme_genero.idGenero;
+
+# VAI TRAZER O FILME QUE NÃO PERTENCE A NENHUM GENERO
+select tbl_filme.nome as filme, tbl_genero.nome as genero
+from tbl_filme 
+left join tbl_filme_genero
+on tbl_filme.idFilme = tbl_filme_genero.idFilme
+left join tbl_genero
+on tbl_genero.idGenero = tbl_filme_genero.idGenero;
+
+# VAI TRAZER A INTECECÃO E TBM OS QUE NÃO PERTENCEM UM AO OUTRO
+# ou seja tras os filmes que não tem genero e o genero que não tem filme
+select tbl_filme.nome as filme, tbl_genero.nome as genero
+from tbl_filme 
+left join tbl_filme_genero
+on tbl_filme.idFilme = tbl_filme_genero.idFilme
+right join tbl_genero
+on tbl_genero.idGenero = tbl_filme_genero.idGenero
+union ## UNINDO OS DOIS COMANDOS FEITOS ANTERIORMENTE ## substitui o full outer join que não existe no mysql
+select tbl_filme.nome as filme, tbl_genero.nome as genero
+from tbl_filme 
+left join tbl_filme_genero
+on tbl_filme.idFilme = tbl_filme_genero.idFilme
+left join tbl_genero
+on tbl_genero.idGenero = tbl_filme_genero.idGenero;
+
+# union --> só funciona quando a quantidade de colunas são iguais
