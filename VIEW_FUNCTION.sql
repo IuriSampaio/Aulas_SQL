@@ -148,4 +148,15 @@ END $$
 call escolhendoFilme(4,@filme); # executando a procedure e guardando a saida numa variavel
 select @filme;
 
-#EXEMPLO 2
+#USANDO INOUT
+## o valor da variavel que entra é substituido pelo valor que sai 	
+DELIMITER ??
+create procedure aumentaQtd(INOUT valor int, tax int)
+begin
+	set valor = valor + valor * tax / 100;
+end ??
+#drop procedure aumentaQtd;
+set @valorInicial = 200;
+
+call aumentaQtd(@valorInicial,3);
+select @valorInicial;
