@@ -66,7 +66,7 @@ create table tbl_filme(
     sinopse text not null
 );
 
-insert into tbl_filme VALUES (DEFAULT,'Privatização é ruim','2010-01-02',3,'llalalz lala lala la al la  aal');
+insert into tbl_filme VALUES (DEFAULT,'Privatização é ruim 2','2010-01-02',3,'llalalz lala lala la al la  aal');
 
 create table tbl_filme_ator(
 	idFilme_ator int not null auto_increment primary key,
@@ -384,7 +384,7 @@ left join tbl_filme_genero
 on tbl_filme.idFilme = tbl_filme_genero.idFilme
 right join tbl_genero
 on tbl_genero.idGenero = tbl_filme_genero.idGenero
-union ## UNINDO OS DOIS COMANDOS FEITOS ANTERIORMENTE ## substitui o full outer join que não existe no mysql
+union## UNINDO OS DOIS COMANDOS FEITOS ANTERIORMENTE ## substitui o full outer join que não existe no mysql
 select tbl_filme.nome as filme, tbl_genero.nome as genero
 from tbl_filme 
 left join tbl_filme_genero
@@ -392,4 +392,27 @@ on tbl_filme.idFilme = tbl_filme_genero.idFilme
 left join tbl_genero
 on tbl_genero.idGenero = tbl_filme_genero.idGenero;
 
-# union --> só funciona quando a quantidade de colunas são iguais
+# union --> elimina a duplicidade mas só funciona quando a quantidade de colunas são iguais 
+# union all --> traz todos os dados, mesmo que estejam duplicados
+
+select tbl_filme.nome as filme, tbl_genero.nome as genero
+from tbl_filme 
+left join tbl_filme_genero
+on tbl_filme.idFilme = tbl_filme_genero.idFilme
+right join tbl_genero
+on tbl_genero.idGenero = tbl_filme_genero.idGenero
+union all## TRAZ TODOS OS DADOS, MESMO QUE ESTAJAM REPLICADOS
+select tbl_filme.nome as filme, tbl_genero.nome as genero
+from tbl_filme 
+left join tbl_filme_genero
+on tbl_filme.idFilme = tbl_filme_genero.idFilme
+left join tbl_genero
+on tbl_genero.idGenero = tbl_filme_genero.idGenero;
+
+# criando um campo virtual
+select nome, quantidade , 'abaixo' as estoque from tbl_filme where quantidade <14
+union
+select nome, quantidade , 'suficiente' as estoque from tbl_filme where quantidade >14;
+
+select distinct nome from tbl_filme; # traz os nomes dos filmes sem repetição
+
